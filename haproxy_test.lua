@@ -20,4 +20,17 @@ function test_create_txn()
     lu.assertEquals(ip, "192.168.1.1")
 end
 
+function test_headers()
+    core:new()
+    local txn = txn:make("GET", "192.168.1.1", "/foo/bar", "https://test.com/foo/bar")
+    lu.assertNotIsNil(txn)
+
+    local value = txn.http:req_get_header("Content-Type")
+    lu.assertIsNil(value)
+
+    txn.http:req_set_header("Content-Type", "text/html")
+    value = txn.http:req_get_header("Content-Type")
+    lu.assertEquals(value, "text/html")
+end
+
 os.exit(lu.LuaUnit.run())

@@ -3,6 +3,8 @@
     https://www.arpalert.org/src/haproxy-lua-api/2.7/#txn-class
 ]]
 
+local mock_http = require('mock_http')
+
 local Txn = {}
 
 function Txn:create()
@@ -18,15 +20,8 @@ function Txn:create()
     txn:set_var("req.url", nil)
 
     -- Mock the http functions.
-    local http = {}
-
-    http.req_set_header = function(name, value)
-        txn:set_var(name, value)
-    end
-
-    http.req_get_header = function(name)
-        return txn:get_var(name)
-    end
+    local http = mock_http:new()
+    txn.http = http
 
     return txn
 end
