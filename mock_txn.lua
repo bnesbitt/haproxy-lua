@@ -17,9 +17,16 @@ function Txn:create()
     txn:set_var("req.path", nil)
     txn:set_var("req.url", nil)
 
+    -- Mock the http functions.
     local http = {}
-    http.req_set_header = function()end
-    txn.http = http
+
+    http.req_set_header = function(name, value)
+        txn:set_var(name, value)
+    end
+
+    http.req_get_header = function(name)
+        return txn:get_var(name)
+    end
 
     return txn
 end
